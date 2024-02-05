@@ -28,13 +28,13 @@ class RegistrationController
             $this->post['local_town']
         );
         $auth = new DataBase();
-        if($auth->authorisation($this->post['last_name'], $this->post['mail'])) {
+        if ($auth->authorisation($this->post['last_name'], $this->post['mail'])) {
             setcookie("mail", $this->post['mail'], time() + 60 * 60 * 24 * 365 * 10, "/");
             header('Location: /redactor.php');
         } else {
-            $errors = (new Validator)->validate($user);
+            $errors = (new Validator)->validateNewUser($user);
             if ($errors) {
-                include PATH . 'views/registrationForm.tpl.php';
+                include PATH . 'public/index.php';
             } else {
                 $this->createUser($user);
                 header('Location: /redactor.php');
@@ -51,30 +51,30 @@ class RegistrationController
 
     public function updateUser()
     {
-            $user = UserModel::getByEmail($_COOKIE['mail']);
-            $user->first_name = $_POST['first_name'];
-            $user->last_name = $_POST['last_name'];
-            $user->gender = $_POST['gender'];
-            $user->group_num = $_POST['gr_num'];
-            $user->mail = $_POST['mail'];
-            $user->sum_ege = $_POST['sum_ege'];
-            $user->y_o_birth = $_POST['y_o_b'];
-            $user->local_town = $_POST['local_town'];
-            $errors = (new Validator)->validate($user);
-            if(!$errors){
-                $user->update();
-                setcookie("mail", $user->getMail(), time() - 60 * 60 * 24 * 365 * 10 , "/");
-                if ($user->getMail() and $user->getLastName()) {
-                    setcookie("mail", $user->getMail(), time() + 60 * 60 * 24 * 365 * 10, "/");
-                }
+        $user = UserModel::getByEmail($_COOKIE['mail']);
+        $user->first_name = $_POST['first_name'];
+        $user->last_name = $_POST['last_name'];
+        $user->gender = $_POST['gender'];
+        $user->group_num = $_POST['gr_num'];
+        $user->mail = $_POST['mail'];
+        $user->sum_ege = $_POST['sum_ege'];
+        $user->y_o_birth = $_POST['y_o_b'];
+        $user->local_town = $_POST['local_town'];
+        $errors = (new Validator)->validateUpdateUser($user);
+        if (!$errors) {
+            $user->update();
+            setcookie("mail", $user->getMail(), time() - 60 * 60 * 24 * 365 * 10, "/");
+            if ($user->getMail() && $user->getLastName()) {
+                setcookie("mail", $user->getMail(), time() + 60 * 60 * 24 * 365 * 10, "/");
             }
+        }
         include PATH . 'views/editForm.tpl.php';
     }
 
     private function createUser(UserModel $user)
     {
         $user->save();
-        if ($user->getMail() and $user->getLastName()) {
+        if ($user->getMail() && $user->getLastName()) {
             setcookie("mail", $user->getMail(), time() + 60 * 60 * 24 * 365 * 10, "/");
         }
     }

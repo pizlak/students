@@ -1,4 +1,6 @@
-<?php require_once '../config/config.php'?>
+<?php
+global $arr_gender,  $arr_local_town;
+require_once '../config/config.php'?>
 
 <!doctype html>
 <html lang="en">
@@ -14,7 +16,7 @@
 </head>
 <body>
 <?php foreach ($errors as $error):?>
-<?=$error ?>
+    <span style="color: red" ><?=$error ?></span>
 <?php endforeach?>
 <form method="POST" action="/registr.php">
     <table>
@@ -30,7 +32,7 @@
             <th><label for="gender">Выберите Ваш пол:</label></th>
             <th> <select name="gender" id="gender">
                     <?php foreach ($arr_gender as $key_gen => $value_gen):?>
-                        <?php echo "<option value=" . $value_gen ."> $value_gen </option>"?>
+                        <?= "<option value=" . $value_gen ."> $value_gen </option>"?>
                     <?php endforeach?>
                 </select></th>
         </tr>

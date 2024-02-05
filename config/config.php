@@ -1,4 +1,5 @@
 <?php
+
 $host = 'localhost'; // сервер
 $dbname = 'students'; // имя таблицы
 $user = 'root'; // логин
@@ -8,10 +9,9 @@ if ($conn->connect_error) { // проверка подключения к БД
     die('Ошибка' . $conn->connect_error);
 }
 define('PATH', dirname(__DIR__) . '/');  // константа диррективы
-spl_autoload_register(function ($class){ // автозагрузка
+spl_autoload_register(function ($class) { // автозагрузка
     $path = PATH . $class . '.php';
-    if(file_exists($path)){
+    if (file_exists($path)) {
         include $path;
     }
 });
-?>

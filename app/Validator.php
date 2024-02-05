@@ -9,13 +9,27 @@ class Validator
 {
     protected array $errors = [];
 
-    public function validate(UserModel $user)
+    public function validateNewUser(UserModel $user)
     {
-       $this->validateFirstName(self::clearData($user->getFirstName()));
+        $this->validateFirstName(self::clearData($user->getFirstName()));
         $this->validateLastName(self::clearData($user->getLastName()));
         $this->validateGender(self::clearData($user->getGender()));
         $this->validateGroupNumber(self::clearData($user->getGroupNum()));
-        $this->validateMail(self::clearData($user->getMail()));
+        $this->validateMailNewUser(self::clearData($user->getMail()));
+        $this->validateEge(self::clearData((int)$user->getSumEge()));
+        $this->validateYOBirth(self::clearData($user->getYOBirth()));
+        $this->validateLocalTown(self::clearData($user->getLocalTown()));
+
+        return $this->errors;
+    }
+
+    public function validateUpdateUser(UserModel $user)
+    {
+        $this->validateFirstName(self::clearData($user->getFirstName()));
+        $this->validateLastName(self::clearData($user->getLastName()));
+        $this->validateGender(self::clearData($user->getGender()));
+        $this->validateGroupNumber(self::clearData($user->getGroupNum()));
+        $this->validateMailUpdateUser(self::clearData($user->getMail()));
         $this->validateEge(self::clearData((int)$user->getSumEge()));
         $this->validateYOBirth(self::clearData($user->getYOBirth()));
         $this->validateLocalTown(self::clearData($user->getLocalTown()));
@@ -36,6 +50,7 @@ class Validator
 
         return htmlspecialchars($val);
     }
+
     public function validateFirstName(string $val): void
     {
         if ($this->validateEmpty($val)) {
@@ -76,7 +91,7 @@ class Validator
         }
     }
 
-    public function validateMail(string $val): void
+    public function validateMailNewUser(string $val): void
     {
         if ($this->validateEmpty($val)) {
             $this->errors['mail'] = ' Ошибка: Поле не может быть пустым.' . '<br>';
@@ -86,8 +101,19 @@ class Validator
             $this->errors['mail'] = 'Ошибка. Вы ввели не верный формат E-Mail.' . '<br>';
         }
         $mail = new DataBase();
-        if($mail->uniqMail($val)){
+        if ($mail->uniqMail($val)) {
             $this->errors['mail'] = ' Ошибка. Данный E-Mail уже занят.' . '<br>';
+        }
+    }
+
+    public function validateMailUpdateUser(string $val): void
+    {
+        if ($this->validateEmpty($val)) {
+            $this->errors['mail'] = ' Ошибка: Поле не может быть пустым.' . '<br>';
+        }
+
+        if (!$this->validateMailFields($val)) {
+            $this->errors['mail'] = 'Ошибка. Вы ввели не верный формат E-Mail.' . '<br>';
         }
     }
 
@@ -99,17 +125,19 @@ class Validator
         if ($val < 1 || $val > 300) {
             $this->errors['sum_ege'] = ' Ошибка. Вы ввели не верные данные. Сумма баллов не может быть больше 300.' . '<br>';
         }
-        if (!intval($val)){
-            $this->errors['sum_ege'] = ' Ошибка. Сумма баллов должна быть числом.'  . '<br>';
+        if (!intval($val)) {
+            $this->errors['sum_ege'] = ' Ошибка. Сумма баллов должна быть числом.' . '<br>';
         }
     }
-    public function validateYOBirth ($val): void
+
+    public function validateYOBirth($val): void
     {
         if ($this->validateEmpty($val)) {
             $this->errors['y_o_b'] = ' Ошибка: Поле не может быть пустым.' . '<br>';
         }
     }
-    public function validateLocalTown ($val): void
+
+    public function validateLocalTown($val): void
     {
         if ($this->validateEmpty($val)) {
             $this->errors['local_town'] = ' Ошибка: Поле не может быть пустым.' . '<br>';

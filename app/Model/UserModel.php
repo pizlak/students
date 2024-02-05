@@ -15,8 +15,17 @@ class UserModel
     public $local_town;
 
 
-    public function __construct($first_name, $last_name, $gender, $group_num, $mail, $sum_ege, $y_o_birth, $local_town, $id = null)
-    {
+    public function __construct(
+        $first_name,
+        $last_name,
+        $gender,
+        $group_num,
+        $mail,
+        $sum_ege,
+        $y_o_birth,
+        $local_town,
+        $id = null
+    ) {
         $this->first_name = $first_name;
         $this->last_name = $last_name;
         $this->gender = $gender;
@@ -59,11 +68,11 @@ class UserModel
                           `Mail` = ?, 
                           `Ege` = ?,
                           `Y_O_Birth` = ?,
-                          `Local_Town` = ? WHERE `id` = " . $this->id
+                          `Local_Town` = ? WHERE `id` = ?"
         );
 
         $update->bind_param(
-            'ssssssss',
+            'sssssssss',
             $this->first_name,
             $this->last_name,
             $this->gender,
@@ -71,7 +80,8 @@ class UserModel
             $this->mail,
             $this->sum_ege,
             $this->y_o_birth,
-            $this->local_town
+            $this->local_town,
+            $this->id
         );
         $result = $update->execute();
         if ($result === false) {
@@ -101,9 +111,12 @@ class UserModel
         }
         return null;
     }
-public function getId(){
+
+    public function getId()
+    {
         return $this->id;
-}
+    }
+
     public function getFirstName()
     {
         return $this->first_name;

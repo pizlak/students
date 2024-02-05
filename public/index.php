@@ -1,6 +1,7 @@
 <?php
+
 require_once '../config/config.php';
-if(isset($_COOKIE['mail'])){
+if (isset($_COOKIE['mail'])) {
     header('Location: redactor.php');
 }
 $errors = [];

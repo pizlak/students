@@ -11,20 +11,20 @@
 </head>
 <body>
 <div class="header">
-    <?php if($_COOKIE['mail']):?>
-    <?php echo  '<br>'?>
+    <?php if(isset($_COOKIE['mail'])):?>
+    <?=  '<br>'?>
     <div class="redact">
         <th><button><a href="../public/redactor.php">Редактировать свои данные</a></button></th>
     </div>
     <?php else:?>
-    <?php echo '<br>'?>
+    <?= '<br>'?>
     <div class="auth">
                 <th><button><a href="../public/index.php">Войти</a></button> <button><a href="../public/index.php">Зарегистрироваться</a></button></th>
     </div>
     <?php endif?>
 </div>
-<?if($result->num_rows > 0):?>
-<?echo '<br>'?>
+<?php if($result->num_rows > 0):?>
+<?= '<br>'?>
 <table>
     <tr>
         <th>Имя</th>
@@ -32,17 +32,17 @@
         <th>Группа</th>
         <th>Сумма баллов ЕГЭ</th>
     </tr>
-    <?while ($row = $result->fetch_assoc()):?>
+    <?php while ($row = $result->fetch_assoc()):?>
         <tr>
-            <td><?echo $row['First_Name']?></td>
-            <td><?echo $row['Last_Name']?></td>
-            <td><?echo $row['Group_Num']?></td>
-            <td><?echo $row['Ege']?></td>
+            <td><?= $row['First_Name']?></td>
+            <td><?= $row['Last_Name']?></td>
+            <td><?= $row['Group_Num']?></td>
+            <td><?= $row['Ege']?></td>
         </tr>
-    <?endwhile?>
-    <?else:?>
-        <span style="color: red"><?echo "Нет данных для отображения"?></span>
-    <?endif?>
+    <?php endwhile?>
+    <?php else:?>
+        <span style="color: red"><?= "Нет данных для отображения"?></span>
+    <?php endif?>
 </table>
 </body>
 </html>
