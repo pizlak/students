@@ -8,4 +8,19 @@ $errors = [];
 $arr_gender = ['male' => 'Мужчина', 'female' => 'Женщина'];
 $arr_local_town = ['local' => 'Местный', 'town' => 'Иногородний'];
 
+/*route = [
+    '/public/studentTable.php' => ['controller' => 'StudentController', 'method' => 'viewStudentsTable'],
+    '/public/redactor.php' => ['controller' => 'RegistrationController', 'method' => 'viewEditForm']
+];
+
+$url = $_SERVER['REQUEST_URI'];
+
+if (isset($route[$url])){
+$controller = new $route[$url]['controller'];
+$controller->$route[$url]['method']();
+} else {
+    echo '404 Page not found';
+    die;
+}*/
+
 include PATH . 'views/registrationForm.tpl.php';

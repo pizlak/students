@@ -1,5 +1,12 @@
 <?php
 
 require_once '../config/config.php';
-$controller = new \app\Controller\StudentController();
-$controller->viewStudentsTable();
+
+
+if (isset($_POST['search'])){
+    $controller = new \app\Controller\StudentController();
+    $controller->viewStudentsTable();
+} else {
+    $controller = new \app\Controller\StudentController();
+    $controller->viewStudentsTable();
+}
