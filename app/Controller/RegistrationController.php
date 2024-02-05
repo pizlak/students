@@ -68,7 +68,7 @@ class RegistrationController
                 setcookie("mail", $user->getMail(), time() + 60 * 60 * 24 * 365 * 10, "/");
             }
         }
-        include PATH . 'views/editForm.tpl.php';
+        include PATH . 'views/editForm.tpl.php'; // изменение
     }
 
     private function createUser(UserModel $user)
