@@ -1,6 +1,4 @@
-<?php
-global $arr_gender,  $arr_local_town;
-require_once '../config/config.php'?>
+<?php require_once '../config/config.php'?>
 
 <!doctype html>
 <html lang="en">
@@ -16,9 +14,9 @@ require_once '../config/config.php'?>
 </head>
 <body>
 <?php foreach ($errors as $error):?>
-    <span style="color: red" ><?=$error ?></span>
+<?=$error ?>
 <?php endforeach?>
-<form method="POST" action="/registr.php">
+<form method="POST" action="registr">
     <table>
         <tr>
             <th><label for="first_name">Имя:</label></th>

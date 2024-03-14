@@ -9,12 +9,12 @@ class StudentController
     public function viewStudentsTable()
     {
         $display = new DataBase();
-        if (!isset($_POST['search'])){
-            $result = $display->getStudents();
-        } else {
-            $result = $display->searchResult();
-        }
-
+        $result = $display->getStudents();
+        include PATH . 'views/studentsTable.tpl.php';
+    }
+    public function viewSearchStudents(){
+        $display = new DataBase();
+        $result = $display->searchResult();
         include PATH . 'views/studentsTable.tpl.php';
     }
 }

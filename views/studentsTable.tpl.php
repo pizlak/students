@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Students Table</title>
-    <link rel="stylesheet" href="/public/css/studentsTable.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../public/styles.css">
 </head>
 <body>
 <div class="body">
-    <div class="search"><form action="/public/studentTable.php" method="post">
+    <div class="search"><form action="/studentTable" method="post">
             <input type="text" name="search" placeholder="Введите запрос">
             <input type="submit" value="Поиск">
         </form></div>
@@ -22,7 +23,7 @@
     <?php else:?>
     <?= '<br>'?>
     <div class="auth">
-                <th><button><a href="../public/index.php">Войти</a></button> <button><a href="../public/index.php">Зарегистрироваться</a></button></th>
+                <th><button><a href="../public/index.php">Войти</a></button> <button><a href="/registr">Зарегистрироваться</a></button></th>
     </div>
     <?php endif?>
 </div>

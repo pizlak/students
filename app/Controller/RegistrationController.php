@@ -30,14 +30,14 @@ class RegistrationController
         $auth = new DataBase();
         if ($auth->authorisation($this->post['last_name'], $this->post['mail'])) {
             setcookie("mail", $this->post['mail'], time() + 60 * 60 * 24 * 365 * 10, "/");
-            header('Location: /redactor.php');
+            header('Location: redactor.php');
         } else {
             $errors = (new Validator)->validateNewUser($user);
             if ($errors) {
                 include PATH . 'public/index.php';
             } else {
                 $this->createUser($user);
-                header('Location: /redactor.php');
+                header('Location: redactor.php');
             }
         }
     }

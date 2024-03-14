@@ -7,9 +7,12 @@ class DataBase
     public function searchResult()
     {
         global $conn;
-        $searchTerm = $_POST['search'];
+        $search = $_POST['search'];
         return $result = $conn->query(
-            "SELECT `First_Name`, `Last_Name`, `Group_Num`, `Ege` FROM `students_res` WHERE `First_Name` LIKE '%$searchTerm%' OR `Last_Name` LIKE '%$searchTerm%'"
+            "SELECT `First_Name`, `Last_Name`, `Group_Num`, `Ege` 
+                    FROM `students_res` 
+                    WHERE `First_Name` LIKE '%$search%' 
+                    OR `Last_Name` LIKE '%$search%'"
         );
     }
 
