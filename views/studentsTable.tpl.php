@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="body">
-    <div class="search"><form action="/studentTable" method="post">
+    <div class="search"><form action="/studentTable/search" method="post">
             <input type="text" name="search" placeholder="Введите запрос">
             <input type="submit" value="Поиск">
         </form></div>
@@ -18,12 +18,12 @@
     <?php if(isset($_COOKIE['mail'])):?>
     <?=  '<br>'?>
     <div class="redact">
-        <th><button><a href="../public/redactor.php">Редактировать свои данные</a></button></th>
+        <th><button><a href="/redactor">Редактировать свои данные</a></button></th>
     </div>
     <?php else:?>
     <?= '<br>'?>
     <div class="auth">
-                <th><button><a href="../public/index.php">Войти</a></button> <button><a href="/registr">Зарегистрироваться</a></button></th>
+                <th><button><a href="/authorisationForm">Войти</a></button> <button><a href="/">Зарегистрироваться</a></button></th>
     </div>
     <?php endif?>
 </div>

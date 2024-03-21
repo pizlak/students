@@ -1,9 +1,7 @@
 <?php
 
 require_once '../config/config.php';
-if (isset($_COOKIE['mail'])) {
-    header('Location: /redactor');
-}
+
 $errors = [];
 $arr_gender = ['male' => 'Мужчина', 'female' => 'Женщина'];
 $arr_local_town = ['local' => 'Местный', 'town' => 'Иногородний'];
@@ -12,47 +10,46 @@ use app\Controller\StudentController;
 use app\Controller\RegistrationController;
 
 $route = [
-    '/studentTable' => [
+    '/' => [
         'controller' => 'app\Controller\StudentController',
-        'method' => 'viewStudentsTable',
-        'methodSearch' => 'viewSearchStudents'
+        'method' => 'viewRegistrationForm'
     ],
-    '/redactor' => [
-        'controller' => 'app\Controller\RegistrationController',
-        'method' => 'viewEditForm',
-        'methodUpdate' => 'updateUser'
+    '/redactor' => [     // форма редактирования данных
+        'controller' => '\app\Controller\RegistrationController',
+        'method' => 'viewEditForm'
+    ],
+    '/redactor/new' => [     // редактирование данных
+        'controller' => '\app\Controller\RegistrationController',
+        'method' => 'updateUser'
+    ],
+    '/authorisation' => [     //  автооризация
+        'controller' => '\app\Controller\RegistrationController',
+        'method' => 'authorisation'
+    ],
+    '/authorisationForm' => [     // форма  автооризации
+        'controller' => '\app\Controller\RegistrationController',
+        'method' => 'viewAuthorisationForm'
     ],
     '/registr' => [
         'controller' => '\app\Controller\RegistrationController',
         'method' => 'registration'
-    ]
+    ],
+    '/studentTable' => [   //таблица со студентами
+        'controller' => 'app\Controller\StudentController',
+        'method' => 'viewStudentsTable'
+    ],
+    '/studentTable/search' => [ // поиск в таблие со студентами
+        'controller' => 'app\Controller\StudentController',
+        'method' => 'viewSearchStudents'
+    ],
+
 ];
-$urlRegistration = '/registr';
-$urlRedactor = '/redactor';
-$urlStudentsTable = '/studentTable';
-/*
-if (isset($route[$urlRedactor])) {
-    $controller = new $route[$urlRedactor]['controller']($_POST);
-    if (!empty($_POST)) {
-        $controller->{$route[$urlRedactor]['methodUpdate']}();
-    } else {
-        $controller->{$route[$urlRedactor]['method']}();
-}}
 
-if (isset($route[$urlRegistration])) {
-    if (!empty($_POST)) {
-        $controller = new $route[$urlRegistration]['controller']($_POST);
-        $controller->{$route[$urlRegistration]['method']}();
-    }
-}*/
+$url = $_SERVER['REQUEST_URI'];
 
-if (isset($route[$urlStudentsTable])) {
-    $controller = new $route[$urlStudentsTable]['controller'];
-    if (!empty($_POST['search'])) {
-        $controller->{$route[$urlStudentsTable]['methodSearch']}();
-    } else {
-        $controller->{$route[$urlStudentsTable]['method']}();
-    }
+if (isset($route[$url])) {
+    $controller = new $route[$url]['controller'];
+    $controller->{$route[$url]['method']}();
 } else {
     echo '404 Page not found';
     die;

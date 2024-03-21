@@ -1,4 +1,5 @@
-<?php require_once '../config/config.php'?>
+<?php require_once '../config/config.php';
+$errors = [];?>
 
 <!doctype html>
 <html lang="en">
@@ -16,7 +17,7 @@
 <?php foreach ($errors as $error):?>
 <?=$error ?>
 <?php endforeach?>
-<form method="POST" action="registr">
+<form method="POST" action="/registr">
     <table>
         <tr>
             <th><label for="first_name">Имя:</label></th>
@@ -29,9 +30,8 @@
         <tr>
             <th><label for="gender">Выберите Ваш пол:</label></th>
             <th> <select name="gender" id="gender">
-                    <?php foreach ($arr_gender as $key_gen => $value_gen):?>
-                        <?= "<option value=" . $value_gen ."> $value_gen </option>"?>
-                    <?php endforeach?>
+                    <option value="Мужчина">Мужчина</option>
+                    <option value="Женщина">Женщина</option>
                 </select></th>
         </tr>
         <tr>
@@ -54,9 +54,8 @@
             <th><label for="local_town">Местный/Иногородний:</label></th>
             <th>
                 <select name="local_town" id="local_town">
-                    <?php foreach ($arr_local_town as $key_lt => $value_lt):?>
-                        <?= "<option value=" . $value_lt . ">$value_lt</option>"?>
-                    <?php endforeach?>
+                    <option value="Местный">Местный</option>
+                    <option value="Иногородний">Иногородний</option>
                 </select>
             </th>
         </tr>

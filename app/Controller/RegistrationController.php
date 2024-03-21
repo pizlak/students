@@ -8,43 +8,69 @@ use app\Controller\DataBase;
 
 class RegistrationController
 {
-    protected array $post;
-
-    public function __construct(array $post)
-    {
-        $this->post = $post;
-    }
-
     public function registration()
     {
         $user = new UserModel(
-            $this->post['first_name'],
-            $this->post['last_name'],
-            $this->post['gender'],
-            $this->post['gr_num'],
-            $this->post['mail'],
-            $this->post['sum_ege'],
-            $this->post['y_o_b'],
-            $this->post['local_town']
+            $_POST['first_name'],
+            $_POST['last_name'],
+            $_POST['gender'],
+            $_POST['gr_num'],
+            $_POST['mail'],
+            $_POST['sum_ege'],
+            $_POST['y_o_b'],
+            $_POST['local_town']
         );
+
+
         $auth = new DataBase();
-        if ($auth->authorisation($this->post['last_name'], $this->post['mail'])) {
-            setcookie("mail", $this->post['mail'], time() + 60 * 60 * 24 * 365 * 10, "/");
-            header('Location: redactor.php');
+        if ($auth->authorisation($_POST['last_name'], $_POST['mail'])) {
+            echo 'Данная электронная почта уже занята';
         } else {
             $errors = (new Validator)->validateNewUser($user);
             if ($errors) {
-                include PATH . 'public/index.php';
+                header('Location: /');
             } else {
                 $this->createUser($user);
-                header('Location: redactor.php');
+                header('Location: /redactor');
             }
         }
     }
 
+    public function authorisation()
+    {
+        $auth = new DataBase();
+        if ($auth->authorisation($_POST['last_name'], $_POST['mail'])) {
+            $user = new UserModel(
+                $_POST['first_name'],
+                $_POST['last_name'],
+                $_POST['gender'],
+                $_POST['gr_num'],
+                $_POST['mail'],
+                $_POST['sum_ege'],
+                $_POST['y_o_b'],
+                $_POST['local_town']
+            );
+
+            setcookie("mail", $_POST['mail'], time() + 60 * 60 * 24 * 365 * 10, "/");
+            header('Location: /redactor');
+            include PATH . 'views/editForm.tpl.php';
+        } else {
+            echo 'Пользователь не найден. Проверьте корректность введенных данных';
+        }
+    }
+
+    public function viewAuthorisationForm()
+    {
+        include PATH . 'views/authorisationForm.tpl.php';
+    }
+
     public function viewEditForm()
     {
+        if (!isset($_COOKIE['mail'])) {
+            header('Location: /');
+        }
         $user = UserModel::getByEmail($_COOKIE['mail']);
+
         $errors = [];
         include PATH . 'views/editForm.tpl.php';
     }
