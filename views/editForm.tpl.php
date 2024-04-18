@@ -21,10 +21,10 @@
 </head>
 <body>
 <div>
-    <button><a href="../public/studentTable.php">Показать список студентов</a></button> <br>
+    <button><a href="/studentTable">Показать список студентов</a></button> <br>
     <h3> Здравствуйте  <?= $user->getFirstName() . ' ' . $user->getLastName() ?> </h3>
 </div>
-<form method="POST" action="/redactor.php">
+<form method="POST" action="/redactor/new">
     <table>
         <tr>
             <th>Имя:</th>
