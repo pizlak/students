@@ -26,11 +26,15 @@ $route = [
         'controller' => '\app\Controller\RegistrationController',
         'method' => 'authorisation'
     ],
+    '/exitAccount'  => [     // выход из аккаунта из личного кабинета
+        'controller' => '\app\Controller\RegistrationController',
+        'method' => 'exitAccount'
+    ],
     '/authorisationForm' => [     // форма  автооризации
         'controller' => '\app\Controller\RegistrationController',
         'method' => 'viewAuthorisationForm'
     ],
-    '/registr' => [
+    '/registr' => [     //регистрауия
         'controller' => '\app\Controller\RegistrationController',
         'method' => 'registration'
     ],
@@ -43,9 +47,10 @@ $route = [
         'method' => 'viewSearchStudents'
     ],
 
+
 ];
 
-$url = $_SERVER['REQUEST_URI'];
+$url = parse_url($_SERVER['REQUEST_URI'])['path'];
 
 if (isset($route[$url])) {
     $controller = new $route[$url]['controller'];
