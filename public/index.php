@@ -2,6 +2,8 @@
 
 require_once '../config/config.php';
 
+$list = []; // для теста ГИТ
+
 $errors = [];
 $arr_gender = ['male' => 'Мужчина', 'female' => 'Женщина'];
 $arr_local_town = ['local' => 'Местный', 'town' => 'Иногородний'];

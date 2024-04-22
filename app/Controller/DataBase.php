@@ -22,7 +22,7 @@ class DataBase
             "SELECT `First_Name`, `Last_Name`, `Group_Num`, `Ege` FROM `students_res` ORDER BY $sort $sortTypeLink LIMIT $perPage OFFSET $offset"
         );
     }
-    public function getSearchTotalStudentsCount(string $search)
+    public function getSearchTotalStudentsCount(string $search) 
     {
         global $conn;
         $result = $conn->query(
@@ -35,7 +35,7 @@ class DataBase
         return $row['total'];
     }
 
-    public function getTotalStudentsCount()
+    public function getTotalStudentsCount() 
     {
         global $conn;
         $result = $conn->query(
