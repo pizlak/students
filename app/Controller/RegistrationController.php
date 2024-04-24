@@ -21,17 +21,17 @@ class RegistrationController
             $_POST['local_town']
         );
 
-
         $auth = new DataBase();
+        header('Content-Type: application/json');
         if ($auth->authorisation($_POST['last_name'], $_POST['mail'])) {
             echo 'Данная электронная почта уже занята';
         } else {
             $errors = (new Validator)->validateNewUser($user);
             if ($errors) {
-                header('Location: /');
+                echo json_encode(['error' => true, 'message' => $errors]);
             } else {
                 $this->createUser($user);
-                header('Location: /redactor');
+                echo json_encode(['error' => false]);
             }
         }
     }
@@ -39,29 +39,33 @@ class RegistrationController
     public function authorisation()
     {
         $auth = new DataBase();
+        header('Content-Type: application/json');
+        $errors = (new Validator)->validateAuthorisation($_POST['last_name'], $_POST['mail']);
         if ($auth->authorisation($_POST['last_name'], $_POST['mail'])) {
-            $user = new UserModel(
-                $_POST['first_name'],
-                $_POST['last_name'],
-                $_POST['gender'],
-                $_POST['gr_num'],
-                $_POST['mail'],
-                $_POST['sum_ege'],
-                $_POST['y_o_b'],
-                $_POST['local_town']
-            );
-
             setcookie("mail", $_POST['mail'], time() + 60 * 60 * 24 * 365 * 10, "/");
-            header('Location: /redactor');
-            include PATH . 'views/editForm.tpl.php';
+            echo json_encode(['error' => false]);
         } else {
-            echo 'Пользователь не найден. Проверьте корректность введенных данных';
+            $errors['authorisation'] = 'Авторизация: Ошибка: Такого пользователя не существует';
+            if ($errors) {
+                echo json_encode(['error' => true, 'message' => $errors]);
+            }
         }
     }
 
     public function viewAuthorisationForm()
     {
         include PATH . 'views/authorisationForm.tpl.php';
+    }
+
+    public function exitAccount()
+    {
+        setcookie("mail", $_COOKIE['mail'], time() - 60 * 60 * 24 * 365 * 10, "/");
+        header('Location: /authorisationForm');
+    }
+
+    public function exit()
+    {
+        setcookie("mail", $_COOKIE['mail'], time() - 60 * 60 * 24 * 365 * 10, "/");
     }
 
     public function viewEditForm()
@@ -86,6 +90,7 @@ class RegistrationController
         $user->sum_ege = $_POST['sum_ege'];
         $user->y_o_birth = $_POST['y_o_b'];
         $user->local_town = $_POST['local_town'];
+        header('Content-Type: application/json');
         $errors = (new Validator)->validateUpdateUser($user);
         if (!$errors) {
             $user->update();
@@ -93,8 +98,10 @@ class RegistrationController
             if ($user->getMail() && $user->getLastName()) {
                 setcookie("mail", $user->getMail(), time() + 60 * 60 * 24 * 365 * 10, "/");
             }
+            echo json_encode(['error' => false]);
+        } else {
+            echo json_encode(['error' => true, 'message' => $errors]);
         }
-        include PATH . 'views/editForm.tpl.php'; // изменение
     }
 
     private function createUser(UserModel $user)

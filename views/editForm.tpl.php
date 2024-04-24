@@ -1,5 +1,6 @@
 <?php
 /** @var \app\Model\UserModel $user */
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -12,73 +13,123 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
-        .errors{  <!-- ПОНЯТНО ЧТО ЭТО ДОЛЖНО БЫТЬ В ФАЙЛЕ CSS, НО ЧТО-ТО У МЕНЯ ПОКА НЕ ХОЧЕТ ОН РАБОТАТЬ -->
-            color: red;
-            font-size: 12px;
+        .container {
+            width: 550px; /* Задайте требуемую ширину контейнера */
+            height: 420px; /* Задайте требуемую высоту контейнера */
+            background-color: #f1f1f1;
+            position: fixed;
+            top: 18%; /* Положение контейнера относительно верхней границы экрана */
+            left: 32%; /* Положение контейнера относительно левой границы экрана */
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
     </style>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#editForm").submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize()
+                $.ajax({
+                    method: 'POST',
+                    url: '/redactor/new',
+                    data: formData,
+                    success: function (response) {
+                        console.log('Success:', response)
+                        if (response.error === false) {
+                            window.location.href = "/redactor"
+                        } else if (response.error === true) {
+                            var errorList = $('<ul>');
+                            $.each(response.message, function (key, value) {
+                                var listItem = $('<p>').html(value);
+                                errorList.append(listItem);
+                            })
+                            $("#error").html(errorList);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 
 </head>
 <body>
-<div>
-    <button><a href="/studentTable">Показать список студентов</a></button> <br>
-    <h3> Здравствуйте  <?= $user->getFirstName() . ' ' . $user->getLastName() ?> </h3>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Таблица со студентами</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/studentTable">
+                        Показать список студентов</a>
+                </li>
+            </ul>
+            <a class="d-flex btn btn-primary" href="/exitAccount">Выйти</a>
+        </div>
+    </div>
+</nav>
+
+<div id="error"></div>
+
+<div class="container">
+    <div class="pagination justify-content-center">
+        <div class="mb-3">
+            <h3> Здравствуйте <?= $user->getFirstName() . ' ' . $user->getLastName() ?> </h3>
+        </div>
+    </div>
+    <div class="pagination justify-content-center">
+        <div class="mb-3">
+            <form id="editForm" method="POST" action="/redactor/new">
+                <table>
+                    <tr>
+                        <th>
+                            <span> Имя: </span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getFirstName() ?>"
+                                   name="first_name">
+                            <span>  Фамилия:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getLastName() ?>"
+                                   name="last_name">
+                            <span>  Пол:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getGender() ?>"
+                                   name="gender">
+                            <span>  Номер группы:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getGroupNum() ?>"
+                                   name="gr_num">
+                        </th>
+                        <th>
+                            <span>   Электронная почта:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getMail() ?>"
+                                   name="mail">
+                            <span>   Сумма баллов ЕГЭ:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getSumEge() ?>"
+                                   name="sum_ege">
+                            <span>   Дата рождения:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getYOBirth() ?>"
+                                   name="y_o_b">
+                            <span>  Местный/Иногородний:</span>
+                            <input class="form-control me-2" type="text" value="<?= $user->getLocalTown() ?>"
+                                   name="local_town">
+                        </th>
+                    </tr>
+                </table>
+                <button class="d-flex btn btn-primary" type="submit">Изменить данные</button>
+
+
+            </form>
+        </div>
+    </div>
 </div>
-<form method="POST" action="/redactor/new">
-    <table>
-        <tr>
-            <th>Имя:</th>
-            <th><input type="text" value="<?= $user->getFirstName() ?>" name="first_name"> </th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['first_name'] ?? '' ?></span></th></tr>
-        <tr>
-            <th>Фамилия:</th>
-            <th><input type="text" value="<?= $user->getLastName() ?>" name="last_name"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['last_name'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>Пол:</th>
-            <th><input type="text" value="<?= $user->getGender() ?>" name="gender"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['gender'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>Номер группы:</th>
-            <th><input type="text" value="<?= $user->getGroupNum() ?>" name="gr_num"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['gr_num'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>Электронная почта:</th>
-            <th><input type="text" value="<?= $user->getMail() ?>" name="mail"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['mail'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>Сумма баллов ЕГЭ:</th>
-            <th><input type="text" value="<?= $user->getSumEge() ?>" name="sum_ege"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['sum_ege'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>Дата рождения:</th>
-            <th><input type="text" value="<?= $user->getYOBirth() ?>" name="y_o_b"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['y_o_b'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>Местный/Иногородний:</th>
-            <th><input type="text" value="<?= $user->getLocalTown() ?>" name="local_town"></th>
-        </tr>
-        <tr><th></th><th><span class="errors"><?=$errors['local_town'] ?? '' ?></span></th></tr>
-        <tr>
-        <tr>
-            <th>
-                <button type="submit">Изменить данные</button>
-            </th>
-        </tr>
-    </table>
-</form>
 </body>
 </html>
