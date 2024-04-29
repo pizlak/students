@@ -8,16 +8,17 @@ class StudentController
 {
     public function viewStudentsTable()
     {
+        $search = $_GET['search'] ?? '';
+        $sort = $_GET['sort'] ?? 'Last_Name';
+        $sortTypeLink = $_GET['sort_type'] ?? 'DESC';
+        $currentPage = $_GET['page'] ?? 1;
+
         $baseSortUrl = '/studentTable';
         $perPage = 50;
-        $currentPage = $_GET['page'] ?? 1;
         $offset = ($currentPage - 1) * $perPage;
         $display = new DataBase();
         $totalRow = $display->getTotalStudentsCount();
         $totalPage = ceil($totalRow / $perPage);
-        $search = $_GET['search'] ?? '';
-        $sort = $_GET['sort'] ?? 'Last_Name';
-        $sortTypeLink = $_GET['sort_type'] ?? 'DESC';
 
         if($sortTypeLink == 'DESC'){
             $sortTypeLink = 'ASC';
@@ -25,9 +26,7 @@ class StudentController
             $sortTypeLink = 'DESC';
         }
 
-
         $result = $display->getStudents($sort, $sortTypeLink, $perPage, $offset);
-
 
         include PATH . 'views/studentsTable.tpl.php';
     }

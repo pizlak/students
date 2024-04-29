@@ -1,51 +1,50 @@
 <?php
-
 require_once '../config/config.php';
 
-$list = []; // для теста ГИТ
+use app\Controller\StudentController;
+use app\Controller\RegistrationController;
 
 $errors = [];
 $arr_gender = ['male' => 'Мужчина', 'female' => 'Женщина'];
 $arr_local_town = ['local' => 'Местный', 'town' => 'Иногородний'];
 
-use app\Controller\StudentController;
-use app\Controller\RegistrationController;
+
 
 $route = [
     '/' => [
-        'controller' => 'app\Controller\StudentController',
+        'controller' => StudentController::class,
         'method' => 'viewRegistrationForm'
     ],
     '/redactor' => [     // форма редактирования данных
-        'controller' => '\app\Controller\RegistrationController',
+        'controller' => RegistrationController::class,
         'method' => 'viewEditForm'
     ],
     '/redactor/new' => [     // редактирование данных
-        'controller' => '\app\Controller\RegistrationController',
+        'controller' => RegistrationController::class,
         'method' => 'updateUser'
     ],
     '/authorisation' => [     //  автооризация
-        'controller' => '\app\Controller\RegistrationController',
+        'controller' => RegistrationController::class,
         'method' => 'authorisation'
     ],
     '/exitAccount'  => [     // выход из аккаунта из личного кабинета
-        'controller' => '\app\Controller\RegistrationController',
+        'controller' => RegistrationController::class,
         'method' => 'exitAccount'
     ],
     '/authorisationForm' => [     // форма  автооризации
-        'controller' => '\app\Controller\RegistrationController',
+        'controller' => RegistrationController::class,
         'method' => 'viewAuthorisationForm'
     ],
     '/registr' => [     //регистрауия
-        'controller' => '\app\Controller\RegistrationController',
+        'controller' => RegistrationController::class,
         'method' => 'registration'
     ],
     '/studentTable' => [   //таблица со студентами
-        'controller' => 'app\Controller\StudentController',
+        'controller' => StudentController::class,
         'method' => 'viewStudentsTable'
     ],
     '/studentTable/search' => [ // поиск в таблие со студентами
-        'controller' => 'app\Controller\StudentController',
+        'controller' => StudentController::class,
         'method' => 'viewSearchStudents'
     ],
 
@@ -58,8 +57,6 @@ if (isset($route[$url])) {
     $controller = new $route[$url]['controller'];
     $controller->{$route[$url]['method']}();
 } else {
-    echo '404 Page not found';
+    echo '<h1>404 Page not found</h1>';
     die;
 }
-/*
-include PATH . 'views/registrationForm.tpl.php';*/

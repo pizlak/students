@@ -17,9 +17,6 @@
             width: 550px; /* Задайте требуемую ширину контейнера */
             height: 420px; /* Задайте требуемую высоту контейнера */
             background-color: #f1f1f1;
-            position: fixed;
-            top: 18%; /* Положение контейнера относительно верхней границы экрана */
-            left: 32%; /* Положение контейнера относительно левой границы экрана */
             padding: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
@@ -32,32 +29,7 @@
             src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function () {
-            $("#editForm").submit(function (event) {
-                event.preventDefault();
-                var formData = $(this).serialize()
-                $.ajax({
-                    method: 'POST',
-                    url: '/redactor/new',
-                    data: formData,
-                    success: function (response) {
-                        console.log('Success:', response)
-                        if (response.error === false) {
-                            window.location.href = "/redactor"
-                        } else if (response.error === true) {
-                            var errorList = $('<ul>');
-                            $.each(response.message, function (key, value) {
-                                var listItem = $('<p>').html(value);
-                                errorList.append(listItem);
-                            })
-                            $("#error").html(errorList);
-                        }
-                    }
-                })
-            })
-        })
-    </script>
+
 
 </head>
 <body>
@@ -125,11 +97,68 @@
                     </tr>
                 </table>
                 <button class="d-flex btn btn-primary" type="submit">Изменить данные</button>
-
-
             </form>
         </div>
     </div>
 </div>
-</body>
-</html>
+
+<h4>История изменений:</h4>
+<div>
+<?php if ($results): ?>
+<table  class="table table-hover">
+    <tr>
+        <th>Дата и время изменений</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Пол</th>
+        <th>Номер группы</th>
+        <th>Электронная почта</th>
+        <th>Сумма баллов ЕГЭ</th>
+        <th>Дата рождения</th>
+        <th>Местный/Иногородний</th>
+    </tr>
+    <?php foreach ($results as $result): ?>
+    <tr>
+        <td><?= $result['dataTime'] ?></td>
+        <td><?= $result['FirstNameEdit']  ?></td>
+        <td><?= $result['LastNameEdit']  ?></td>
+        <td><?= $result['GenderEdit']  ?></td>
+        <td><?= $result['GroupNumEdit']  ?></td>
+        <td><?= $result['MailEdit']  ?></td>
+        <td><?= $result['EgeEdit']  ?></td>
+        <td><?= $result['YOBirthEdit']  ?></td>
+        <td><?= $result['LocalTownEdit']  ?></td>
+    </tr>
+    <?php endforeach ?>
+    <?php else: ?>
+    <div style="color: #666666"><h5>История изменений отсутствует.</h5></div>
+    <?php endif ?>
+</table>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#editForm").submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize()
+            $.ajax({
+                method: 'POST',
+                url: '/redactor/new',
+                data: formData,
+                success: function (response) {
+                    console.log('Success:', response);
+                    if (response.error === false) {
+                        window.location.href = '/redactor';
+                    } else if (response.error === true) {
+                        var errorList = $('<ul>');
+                        $.each(response.message, function (key, value) {
+                            var listItem = $('<p>').html(value);
+                            errorList.append(listItem);
+                        })
+                        $("#error").html(errorList);
+                    }
+                }
+            })
+        })
+    })
+
+</script>

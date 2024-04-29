@@ -70,10 +70,16 @@ class RegistrationController
 
     public function viewEditForm()
     {
-        if (!isset($_COOKIE['mail'])) {
+        $mail = $_COOKIE['mail'];
+        if (!isset($mail)) {
             header('Location: /');
         }
-        $user = UserModel::getByEmail($_COOKIE['mail']);
+        $user = UserModel::getByEmail($mail);
+
+        $editData = new UserDataChanges();
+        $userId = new DataBase();
+
+        $results = $editData->getEditData($userId->getUserId($mail));
 
         $errors = [];
         include PATH . 'views/editForm.tpl.php';
@@ -81,7 +87,9 @@ class RegistrationController
 
     public function updateUser()
     {
-        $user = UserModel::getByEmail($_COOKIE['mail']);
+        header('Content-Type: application/json');
+        $mail = $_COOKIE['mail'];
+        $user = UserModel::getByEmail($mail);
         $user->first_name = $_POST['first_name'];
         $user->last_name = $_POST['last_name'];
         $user->gender = $_POST['gender'];
@@ -90,11 +98,18 @@ class RegistrationController
         $user->sum_ege = $_POST['sum_ege'];
         $user->y_o_birth = $_POST['y_o_b'];
         $user->local_town = $_POST['local_town'];
-        header('Content-Type: application/json');
         $errors = (new Validator)->validateUpdateUser($user);
         if (!$errors) {
             $user->update();
+
+            $userId = new DataBase();
+            $editData = new UserDataChanges();
+            $editData->saveEditData($userId->getUserId($mail), $user->getFirstName(), $user->getLastName(), $user->getGender(),
+                $user->getGroupNum(), $user->getMail(), $user->getSumEge(), $user->getYOBirth(), $user->getLocalTown());
+
             setcookie("mail", $user->getMail(), time() - 60 * 60 * 24 * 365 * 10, "/");
+
+
             if ($user->getMail() && $user->getLastName()) {
                 setcookie("mail", $user->getMail(), time() + 60 * 60 * 24 * 365 * 10, "/");
             }
